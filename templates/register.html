@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Register | Campus Lost and Found</title>
+</head>
+<body>
+    <h1>Create an account</h1>
+
+    <form method="post">
+        <p>
+            <label>Username
+                <input name="username" autocomplete="username" required>
+            </label>
+        </p>
+        <p>
+            <label>Password
+                <input type="password" name="password" autocomplete="new-password" required>
+            </label>
+        </p>
+        <button type="submit">Register</button>
+    </form>
+
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
+</body>
+</html>
