@@ -1,3 +1,7 @@
 .venv/
 instance/
+<<<<<<< HEAD
 __pycache__/
+=======
+__pycache__/
+>>>>>>> b76bef6 (Added student registration)
