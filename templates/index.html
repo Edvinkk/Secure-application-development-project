@@ -7,5 +7,26 @@
 <body>
     <h1>Campus Lost and Found</h1>
     <p>You are logged in as {{ username }}.</p>
+    <p><a href="{{ url_for('create_listing') }}">Post a lost or found item</a></p>
+
+    <h2>Lost and found listings</h2>
+
+<form method="get" action="{{ url_for('index') }}">
+    <label for="search">Search by description or location</label>
+    <input id="search" name="q" value="{{ keyword }}">
+    <button type="submit">Search</button>
+</form>
+
+<ul>
+    {% for item in listings %}
+        <li>
+            <strong>{{ item["item_type"] | capitalize }}</strong>
+            — {{ item["description"] }} ({{ item["location"] }})
+        </li>
+    {% else %}
+        <li>No listings found.</li>
+    {% endfor %}
+</ul>
+
 </body>
 </html>
