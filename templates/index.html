@@ -22,6 +22,9 @@
         <li>
             <strong>{{ item["item_type"] | capitalize }}</strong>
             — {{ item["description"] }} ({{ item["location"] }})
+            {% if item["item_type"] == "found" %}
+                <a href="{{ url_for('listing_claims', listing_id=item['id']) }}">View claims</a>
+            {% endif %}
         </li>
     {% else %}
         <li>No listings found.</li>

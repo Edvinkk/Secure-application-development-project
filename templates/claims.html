@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Item claims</title>
+</head>
+<body>
+    <h1>{{ listing["description"] }}</h1>
+    <p>Found at {{ listing["location"] }}</p>
+
+    {% if not is_poster %}
+        <form method="post">
+            <label for="message">Describe a detail that identifies your item</label>
+            <textarea id="message" name="message" required></textarea>
+            <button type="submit">Send private claim</button>
+        </form>
+    {% endif %}
+
+    {% if error %}
+        <p>{{ error }}</p>
+    {% endif %}
+
+    <h2>{{ "Claims received" if is_poster else "Your claims" }}</h2>
+    <ul>
+        {% for claim in claims %}
+            <li><strong>{{ claim["username"] }}</strong> — {{ claim["message"] }}</li>
+        {% else %}
+            <li>No claims to show.</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ url_for('index') }}">Back to listings</a>
+</body>
+</html>
