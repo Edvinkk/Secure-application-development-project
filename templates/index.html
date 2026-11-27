@@ -15,6 +15,7 @@
     <label for="search">Search by description or location</label>
     <input id="search" name="q" value="{{ keyword }}">
     <button type="submit">Search</button>
+    <p id="search-summary" hidden></p>
 </form>
 
 <ul>
@@ -31,5 +32,6 @@
     {% endfor %}
 </ul>
 
+<script src="{{ url_for('static', filename='search.js') }}"></script>
 </body>
 </html>
