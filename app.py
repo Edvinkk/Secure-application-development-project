@@ -106,13 +106,14 @@ def index():
         db.row_factory = sqlite3.Row
         # Vulnerable
         listings = db.execute(
-            f"""
+            """
             SELECT id, item_type, description, location
             FROM listings
-            WHERE instr(lower(description), lower('{keyword}')) > 0
-               OR instr(lower(location), lower('{keyword}')) > 0
+            WHERE instr(lower(description), lower(?)) > 0
+            OR instr(lower(location), lower(?)) > 0
             ORDER BY id DESC
             """,
+            (keyword, keyword),
         ).fetchall()
 
     return render_template(

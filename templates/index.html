@@ -13,7 +13,10 @@
 
 <form method="get" action="{{ url_for('index') }}">
     <label for="search">Search by description or location</label>
-    <input id="search" name="q" value="{{ keyword }}">
+    
+    <!-- Vulnerable Reflected XSS -->
+    <input id="search" name="q" value="{{ keyword | safe }}">
+
     <button type="submit">Search</button>
 </form>
 
@@ -21,7 +24,7 @@
     {% for item in listings %}
         <li>
             <strong>{{ item["item_type"] | capitalize }}</strong>
-            — {{ item["description"] }} ({{ item["location"] }})
+            — {{ item["description"] | safe }} ({{ item["location"] | safe }})
             {% if item["item_type"] == "found" %}
                 <a href="{{ url_for('listing_claims', listing_id=item['id']) }}">View claims</a>
             {% endif %}
@@ -31,5 +34,14 @@
     {% endfor %}
 </ul>
 
+
+<!-- vulnerable DOM-based XSS -->
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get('q');
+    if (q) {
+        document.write("<p>You searched for: " + q + "</p>");
+    }
+</script>
 </body>
 </html>
