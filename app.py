@@ -59,9 +59,9 @@ def register():
 
     try:
         with closing(sqlite3.connect(database)) as db:
+            # Vulnerable
             db.execute(
-                "INSERT INTO users (username, password_hash) VALUES (?, ?)",
-                (username, password_hash),
+                f"INSERT INTO users (username, password_hash) VALUES ('{username}', '{password_hash}')"
             )
             db.commit()
     except sqlite3.IntegrityError:
@@ -79,9 +79,9 @@ def login():
 
     with closing(sqlite3.connect(database)) as db:
         db.row_factory = sqlite3.Row
+        # Vulnerable
         user = db.execute(
-            "SELECT id, username, password_hash FROM users WHERE username = ?",
-            (username,),
+            f"SELECT id, username, password_hash FROM users WHERE username = '{username}'"
         ).fetchone()
 
     if user is None or not check_password_hash(user["password_hash"], password):
@@ -104,15 +104,15 @@ def index():
     # An empty keyword shows all listings with the newest first.
     with closing(sqlite3.connect(database)) as db:
         db.row_factory = sqlite3.Row
+        # Vulnerable
         listings = db.execute(
-            """
+            f"""
             SELECT id, item_type, description, location
             FROM listings
-            WHERE instr(lower(description), lower(?)) > 0
-               OR instr(lower(location), lower(?)) > 0
+            WHERE instr(lower(description), lower('{keyword}')) > 0
+               OR instr(lower(location), lower('{keyword}')) > 0
             ORDER BY id DESC
             """,
-            (keyword, keyword),
         ).fetchall()
 
     return render_template(
@@ -142,12 +142,12 @@ def create_listing():
 
     # Use the student ID from the login session
     with closing(sqlite3.connect(database)) as db:
+        # Vulnerable
         db.execute(
-            """
+            f"""
             INSERT INTO listings (user_id, item_type, description, location)
-            VALUES (?, ?, ?, ?)
-            """,
-            (session["user_id"], item_type, description, location),
+            VALUES ({session["user_id"]}, '{item_type}', '{description}', '{location}')
+            """
         )
         db.commit()
 
@@ -185,8 +185,8 @@ def listing_claims(listing_id):
             if message:
                 # Get the claimant's ID from their login session.
                 db.execute(
-                    "INSERT INTO claims (listing_id, claimant_id, message) VALUES (?, ?, ?)",
-                    (listing_id, student_id, message),
+                    f"INSERT INTO claims (listing_id, claimant_id, message) "
+                    f"VALUES ({listing_id}, {student_id}, '{message}')"
                 )
                 db.commit()
                 return redirect(url_for("listing_claims", listing_id=listing_id))
