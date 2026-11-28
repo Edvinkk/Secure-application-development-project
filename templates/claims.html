@@ -5,8 +5,9 @@
     <title>Item claims</title>
 </head>
 <body>
-    <h1>{{ listing["description"] }}</h1>
-    <p>Found at {{ listing["location"] }}</p>
+    <!--  vulnerable Stored XSS -->
+    <h1>{{ listing["description"] | safe }}</h1>
+    <p>Found at {{ listing["location"] | safe }}</p>
 
     {% if not is_poster %}
         <form method="post">
@@ -23,7 +24,8 @@
     <h2>{{ "Claims received" if is_poster else "Your claims" }}</h2>
     <ul>
         {% for claim in claims %}
-            <li><strong>{{ claim["username"] }}</strong> — {{ claim["message"] }}</li>
+            <!-- vulnerable Stored XSS -->
+            <li><strong>{{ claim["username"] }}</strong> — {{ claim["message"] | safe }}</li>
         {% else %}
             <li>No claims to show.</li>
         {% endfor %}
